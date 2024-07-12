@@ -1,0 +1,5 @@
+package com.hamysecurity.repository;
+
+public interface UserRepository {
+
+}

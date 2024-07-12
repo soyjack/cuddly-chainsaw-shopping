@@ -1,0 +1,40 @@
+/* Cart.css */
+.cart {
+  padding: 20px;
+}
+
+.cart h2 {
+  margin-bottom: 20px;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.cart-item-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.cart-item-details h4 {
+  margin: 0 0 10px 0;
+}
+
+.cart-item-details p {
+  margin: 0;
+  color: #666;
+}
+
+.no-items-in-cart {
+  font-size: 18px;
+  color: #888;
+}

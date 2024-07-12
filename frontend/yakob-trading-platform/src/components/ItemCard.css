@@ -1,0 +1,22 @@
+/* ItemCard.css */
+.item-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  text-align: center;
+  width: 150px;
+  position: relative;
+}
+
+.item-image {
+  width: 100%;
+  height: auto;
+}
+
+.item-description {
+  height: 150px;
+}
+
+button {
+  margin-top: 10px;
+}

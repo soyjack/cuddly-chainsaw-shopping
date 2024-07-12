@@ -1,0 +1,5 @@
+package com.hamy.tradeshop.controller;
+
+public class UserController {
+
+}

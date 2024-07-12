@@ -1,0 +1,5 @@
+package com.hamysecurity.util;
+
+public class JwtUtil {
+
+}

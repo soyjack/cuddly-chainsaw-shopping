@@ -1,0 +1,14 @@
+package com.hamysecurity;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
+@SpringBootApplication
+@EnableJpaRepositories(basePackages = "com.hamysecurity.repository")
+public class MySecurityApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(MySecurityApplication.class, args);
+    }
+}

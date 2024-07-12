@@ -1,0 +1,5 @@
+package com.hamy.tradeshop.filter;
+
+public class JwtRequestFilter {
+
+}

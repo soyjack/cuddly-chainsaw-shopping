@@ -1,0 +1,5 @@
+package com.hamy.tradeshop.exception;
+
+public class ResourceNotFoundException {
+
+}

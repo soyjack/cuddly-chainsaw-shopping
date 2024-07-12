@@ -1,0 +1,5 @@
+package com.hamy.tradeshop.service;
+
+public class ItemPostService {
+
+}

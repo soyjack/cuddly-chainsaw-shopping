@@ -1,0 +1,62 @@
+package com.hamy.tradeshop.controller;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.hamy.tradeshop.model.ItemPost;
+import com.hamy.tradeshop.service.ItemPostService;
+
+@RestController
+@CrossOrigin("*")
+@RequestMapping("/api/itemposts")
+public class ItemPostController {
+    
+    @Autowired
+    private ItemPostService itemPostService;
+
+    @GetMapping
+    public Iterable<ItemPost> getItemPosts() {
+        return this.itemPostService.getAllItemPosts();
+    }
+    
+    @PostMapping
+    public ResponseEntity<ItemPost> createItemPost(@RequestBody ItemPost itemPost) {
+        return ResponseEntity.ok(this.itemPostService.saveItemPost(itemPost));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ItemPost> getItemPostById(@PathVariable Long id) {
+        Optional<ItemPost> itemPost = itemPostService.getItemPostById(id);
+        if (itemPost.isPresent()) {
+            return ResponseEntity.ok(itemPost.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ItemPost> updateItemPost(@PathVariable Long id, @RequestBody ItemPost itemPostDetails) {
+        Optional<ItemPost> itemPostOptional = itemPostService.getItemPostById(id);
+        if (itemPostOptional.isPresent()) {
+            ItemPost itemPost = itemPostOptional.get();
+            itemPost.setImageName(itemPostDetails.getImageName());
+            itemPost.setItemName(itemPostDetails.getItemName());
+            itemPost.setItemDescription(itemPostDetails.getItemDescription());
+            itemPost.setSellerName(itemPostDetails.getSellerName());
+            itemPost.setPrice(itemPostDetails.getPrice());
+            return ResponseEntity.ok(itemPostService.saveItemPost(itemPost));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteItemPost(@PathVariable Long id) {
+        itemPostService.deleteItemPost(id);
+        return ResponseEntity.noContent().build();
+    }
+}

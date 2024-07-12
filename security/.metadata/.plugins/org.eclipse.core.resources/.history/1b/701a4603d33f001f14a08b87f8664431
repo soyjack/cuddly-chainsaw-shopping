@@ -1,0 +1,5 @@
+package com.hamysecurity.service;
+
+public class UserServiceImpl {
+
+}

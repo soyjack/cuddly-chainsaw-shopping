@@ -1,0 +1,5 @@
+package com.hamysecurity.model;
+
+public class User {
+
+}

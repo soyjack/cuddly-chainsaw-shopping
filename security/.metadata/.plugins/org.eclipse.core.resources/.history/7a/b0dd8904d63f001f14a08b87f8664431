@@ -1,0 +1,70 @@
+package com.hamysecurity.controller;
+
+import com.hamysecurity.dto.SignInRequest;
+import com.hamysecurity.dto.SignUpRequest;
+import com.hamysecurity.model.User;
+import com.hamysecurity.service.UserServiceImpl;
+import com.hamysecurity.util.JwtUtil;
+
+import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/auth")
+public class AuthController {
+
+    @Value("${security.jwt.secret-key}")
+    private String jwtSecretKey;
+
+    private final AuthenticationManager authenticationManager;
+    private final UserServiceImpl userService;
+    private final JwtUtil jwtUtil;
+
+    public AuthController(AuthenticationManager authenticationManager, UserServiceImpl userService, JwtUtil jwtUtil) {
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
+    }
+
+    @PostMapping("/login")
+    public Map<String, String> login(@RequestBody SignInRequest signInRequest) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(signInRequest.getUserName(), signInRequest.getPassword())
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            User userDetails = (User) authentication.getPrincipal();
+            String token = jwtUtil.generateToken(userDetails);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("token", token);
+            return response;
+        } catch (AuthenticationException e) {
+            throw new RuntimeException("Invalid credentials");
+        }
+    }
+
+    @PostMapping("/register")
+    public String register(@Valid @RequestBody SignUpRequest signUpRequest) {
+        User user = new User();
+        user.setUserName(signUpRequest.getUserName());
+        user.setPassword(signUpRequest.getPassword());
+        user.setEmail(signUpRequest.getEmail());
+        user.setRole(signUpRequest.getRole());
+        userService.save(user);
+        return "User registered successfully";
+    }
+}

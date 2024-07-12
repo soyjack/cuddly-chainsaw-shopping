@@ -1,0 +1,16 @@
+/* Dashboard.css */
+.dashboard {
+  padding-top: 60px; /* Adjust the padding to the height of the header */
+}
+
+.item-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.no-items-found {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 20px;
+}

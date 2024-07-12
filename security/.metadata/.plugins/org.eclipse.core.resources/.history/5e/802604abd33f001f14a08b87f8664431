@@ -1,0 +1,5 @@
+package com.hamysecurity.controller;
+
+public class AuthController {
+
+}
