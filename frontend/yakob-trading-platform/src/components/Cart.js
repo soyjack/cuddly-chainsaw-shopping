@@ -1,7 +1,5 @@
-// Cart.js
 import React from 'react';
 import { useCart } from './CartContext';
-import ItemCard from './ItemCard';
 import './Dashboard.css'; // Reuse the same styles
 
 const Cart = () => {
@@ -18,7 +16,8 @@ const Cart = () => {
         {cart.length > 0 ? (
           cart.map(item => (
             <div key={item.id} className="cart-item">
-              <ItemCard item={item} />
+              <h3>{item.itemName}</h3>
+              <p>Price: ${item.price}</p>
               <p>Quantity: {item.quantity}</p>
               <button onClick={() => removeFromCart(item.id)}>Remove</button>
             </div>

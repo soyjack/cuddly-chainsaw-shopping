@@ -1,6 +1,5 @@
-// ItemCard.js
 import React, { useState } from 'react';
-import './ItemCard.css'; // Ensure you have styles for ItemCard
+import './ItemCard.css';
 
 const ItemCard = ({ item, onAddToCart }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -12,13 +11,14 @@ const ItemCard = ({ item, onAddToCart }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       {isHovered ? (
-        <p className="item-description">{item.description}</p>
+        <p className="item-description">{item.itemDescription}</p>
       ) : (
-        <img src={item.image} alt={item.name} className="item-image" />
+        <img src={item.imageName} alt={item.itemName} className="item-image" />
       )}
-      <h3>{item.name}</h3>
+      <h3>{item.itemName}</h3>
       <p>{item.price}</p> {/* Display price */}
       <button onClick={() => onAddToCart(item)}>Add to Cart</button>
+      <p>Seller: {item.seller?.username}</p> {/* Display seller information */}
     </div>
   );
 };

@@ -1,5 +1,4 @@
-// Settings.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Settings.css';
 
 const Settings = () => {
@@ -8,20 +7,117 @@ const Settings = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
+      try {
+        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        const userId = decodedToken.userId; // Assuming user ID is stored in 'userId' field
+
+        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUsername(data.username);
+          setEmail(data.email);
+        } else {
+          console.error('Error fetching user info:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
   const handleUpdate = async (event) => {
     event.preventDefault();
-    // Perform the update logic, e.g., call an API to update user info
-    // For now, we just show a success message
-    setMessage('Profile updated successfully');
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+
+    try {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const userId = decodedToken.userId; // Assuming user ID is stored in 'userId' field
+
+      const updatedInfo = {
+        username,
+        password,
+        email,
+      };
+
+      // Log the JSON payload to the console
+      console.log('Update Payload:', JSON.stringify(updatedInfo, null, 2));
+
+      const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(updatedInfo),
+      });
+
+      if (response.ok) {
+        setMessage('Profile updated successfully');
+      } else {
+        setMessage('Error updating profile');
+        console.error('Error updating profile:', response.statusText);
+      }
+    } catch (error) {
+      setMessage('Error updating profile');
+      console.error('Error updating profile:', error);
+    }
   };
 
   const handleDeleteAccount = async () => {
-    // Perform the account deletion logic, e.g., call an API to delete the account
-    // For now, we just show a success message
-    setMessage('Account deleted successfully');
-    // Redirect to login or homepage after account deletion
-    localStorage.removeItem('token');
-    window.location.href = '/login';
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+
+    try {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const userId = decodedToken.userId; // Assuming user ID is stored in 'userId' field
+
+      // Log the userId to the console
+      console.log('Delete User ID:', userId);
+
+      const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        setMessage('Account deleted successfully');
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      } else {
+        setMessage('Error deleting account');
+        console.error('Error deleting account:', response.statusText);
+      }
+    } catch (error) {
+      setMessage('Error deleting account');
+      console.error('Error deleting account:', error);
+    }
   };
 
   return (
