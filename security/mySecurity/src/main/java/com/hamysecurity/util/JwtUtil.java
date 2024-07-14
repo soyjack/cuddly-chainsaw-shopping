@@ -20,24 +20,46 @@ import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
+/**
+ * The JwtUtil class provides methods for generating JWT tokens.
+ */
 @Component
 public class JwtUtil {
 
     private final JwtEncoder jwtEncoder;
     private final String jwtIssuer;
 
+    /**
+     * Constructor to initialize JwtUtil with the secret key and issuer.
+     * 
+     * @param secretKey the secret key used for signing the JWT.
+     * @param jwtIssuer the issuer of the JWT.
+     */
     public JwtUtil(@Value("${security.jwt.secret-key}") String secretKey,
                    @Value("${security.jwt.issuer}") String jwtIssuer) {
+        // Create a SecretKeySpec from the secret key
         SecretKey secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
+        // Build a JWK from the SecretKeySpec
         JWK jwk = new OctetSequenceKey.Builder(secretKeySpec).build();
+        // Create a JWKSource from the SecretKeySpec
         JWKSource<SecurityContext> jwkSource = new ImmutableSecret<>(secretKeySpec);
+        // Initialize the JwtEncoder with the JWKSource
         this.jwtEncoder = new NimbusJwtEncoder(jwkSource);
+        // Trim any extra whitespace from the issuer
         this.jwtIssuer = jwtIssuer.trim();
     }
 
+    /**
+     * Generates a JWT token for the given user details and user ID.
+     * 
+     * @param userDetails the user details.
+     * @param userId the user ID.
+     * @return the generated JWT token.
+     */
     public String generateToken(UserDetails userDetails, Long userId) {
         Instant now = Instant.now();
 
+        // Build the JWT claims
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer(jwtIssuer)
                 .issuedAt(now)
@@ -47,8 +69,10 @@ public class JwtUtil {
                 .claim("userId", userId)
                 .build();
 
+        // Build the JWT header and parameters
         JwtEncoderParameters params = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
 
+        // Encode the JWT and return the token value
         return jwtEncoder.encode(params).getTokenValue();
     }
 }

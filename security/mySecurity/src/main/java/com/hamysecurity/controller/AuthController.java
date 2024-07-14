@@ -13,6 +13,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * The AuthController class handles authentication requests such as sign-in and sign-up.
+ */
 @RestController
 @RequestMapping("/authenticate")
 public class AuthController {
@@ -30,9 +33,17 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Handles sign-in requests.
+     * 
+     * @param signInRequest the sign-in request containing username and password.
+     * @return the authentication response containing the JWT token.
+     * @throws Exception if the authentication fails.
+     */
     @PostMapping("/signin")
     public AuthenticationResponse createAuthenticationToken(@RequestBody SignInRequest signInRequest) throws Exception {
         try {
+            // Authenticate the user
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signInRequest.getUsername(), signInRequest.getPassword())
             );
@@ -40,6 +51,7 @@ public class AuthController {
             throw new Exception("Incorrect username or password", e);
         }
 
+        // Load user details and generate JWT token
         final UserDetails userDetails = userDetailsService.loadUserByUsername(signInRequest.getUsername());
         final Long userId = userService.getUserIdByUsername(signInRequest.getUsername()); // Get user ID
 
@@ -48,6 +60,11 @@ public class AuthController {
         return new AuthenticationResponse(jwt);
     }
 
+    /**
+     * Handles sign-up requests.
+     * 
+     * @param signUpRequest the sign-up request containing user details.
+     */
     @PostMapping("/signup")
     public void signup(@RequestBody SignUpRequest signUpRequest) {
         userService.signup(signUpRequest);

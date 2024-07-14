@@ -1,9 +1,13 @@
-// Login.js
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 import './Login.css';
 
+/**
+ * The Login component handles user authentication.
+ * It provides a form for users to enter their username and password,
+ * and handles the submission to the server.
+ */
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -12,6 +16,12 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
+  /**
+   * Handles the form submission for user login.
+   * Sends a POST request to the server with the entered username and password.
+   * 
+   * @param {Event} event - The form submission event.
+   */
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -28,25 +38,25 @@ const Login = () => {
       }
 
       const data = await response.json();
-      console.log("Response data:", data); // Log the entire response
 
       if (!data.jwt) {
         throw new Error('Token not received');
       }
 
-      console.log("Token received:", data.jwt); // Log the token received
       localStorage.setItem('token', data.jwt);
       login(data.jwt);
       setMessage('Login successful');
       setError('');
       navigate('/dashboard');
     } catch (error) {
-      console.error('Error during login:', error); // Log any errors
       setError(error.message);
       setMessage('');
     }
   };
 
+  /**
+   * Redirects the user to the registration page.
+   */
   const handleRegisterRedirect = () => {
     navigate('/register');
   };

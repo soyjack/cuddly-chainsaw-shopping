@@ -12,19 +12,27 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 
+/**
+ * The JwtRequestFilter class extends OncePerRequestFilter to filter incoming requests
+ * and validate JWT tokens for authentication.
+ */
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-
-    private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
 
     @Autowired
     private JwtUtil jwtUtil;
 
+    /**
+     * Filters each request to validate JWT tokens.
+     * 
+     * @param request the HttpServletRequest object.
+     * @param response the HttpServletResponse object.
+     * @param chain the FilterChain object.
+     * @throws ServletException if an exception occurs that interferes with the filter's normal operation.
+     * @throws IOException if an I/O related error has occurred during the processing.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
@@ -39,16 +47,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (jwt != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             boolean isValid = jwtUtil.validateToken(jwt);
-            logger.info("Token validation result: {}", isValid);
 
             if (isValid) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         null, null, null);
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                logger.info("Token validated successfully");
-            } else {
-                logger.warn("Invalid JWT token");
             }
         }
         chain.doFilter(request, response);

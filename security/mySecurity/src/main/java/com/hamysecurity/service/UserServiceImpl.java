@@ -17,6 +17,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
+/**
+ * The UserServiceImpl class implements the UserService interface to provide user-related services
+ * such as registration, updating, deleting, and synchronizing users with TradeShop.
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -34,11 +38,22 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    /**
+     * Gets the user ID by username.
+     * 
+     * @param username the username of the user.
+     * @return the user ID.
+     */
     public Long getUserIdByUsername(String username) {
         User user = userRepository.findByUsername(username);
         return user.getId();
     }
 
+    /**
+     * Registers a new user.
+     * 
+     * @param signUpRequest the sign-up request containing user details.
+     */
     @Override
     public void signup(SignUpRequest signUpRequest) {
         // Save user in mySecurity database
@@ -59,6 +74,13 @@ public class UserServiceImpl implements UserService {
         synchronizeWithTradeShop(user, token);
     }
 
+    /**
+     * Updates a user's details.
+     * 
+     * @param id the ID of the user to update.
+     * @param userDetails the new details of the user.
+     * @return the updated user or null if not found.
+     */
     @Override
     public User updateUser(Long id, User userDetails) {
         Optional<User> optionalUser = userRepository.findById(id);
@@ -84,6 +106,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Deletes a user by their ID.
+     * 
+     * @param id the ID of the user to delete.
+     * @return true if the user was deleted, false otherwise.
+     */
     @Override
     public boolean deleteUser(Long id) {
         if (userRepository.existsById(id)) {
@@ -94,6 +122,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Synchronizes the user data with the TradeShop application.
+     * 
+     * @param user the user to synchronize.
+     * @param token the JWT token for authentication.
+     */
     private void synchronizeWithTradeShop(User user, String token) {
         RestTemplate restTemplate = new RestTemplate();
         String tradeShopUrl = "http://localhost:8080/api/users/sync";
@@ -113,9 +147,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Gets a user by their ID.
+     * 
+     * @param id the ID of the user to retrieve.
+     * @return the user or null if not found.
+     */
     @Override
     public User getUserById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
-
 }

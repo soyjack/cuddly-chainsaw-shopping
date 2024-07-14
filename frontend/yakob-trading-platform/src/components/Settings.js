@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Settings.css';
 
+/**
+ * The Settings component allows users to update their profile information
+ * and delete their account.
+ */
 const Settings = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
+  /**
+   * Fetch the user's current profile information when the component mounts.
+   */
   useEffect(() => {
     const fetchUserInfo = async () => {
       const token = localStorage.getItem('token');
@@ -14,9 +21,6 @@ const Settings = () => {
         console.error('No token found');
         return;
       }
-
-      // Log the token to the console
-      console.log('Token:', token);
 
       try {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
@@ -45,6 +49,11 @@ const Settings = () => {
     fetchUserInfo();
   }, []);
 
+  /**
+   * Handle updating the user's profile information.
+   * 
+   * @param {Event} event - The form submission event.
+   */
   const handleUpdate = async (event) => {
     event.preventDefault();
 
@@ -53,9 +62,6 @@ const Settings = () => {
       console.error('No token found');
       return;
     }
-
-    // Log the token to the console
-    console.log('Token:', token);
 
     try {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
@@ -66,9 +72,6 @@ const Settings = () => {
         password,
         email,
       };
-
-      // Log the JSON payload to the console
-      console.log('Update Payload:', JSON.stringify(updatedInfo, null, 2));
 
       const response = await fetch(`http://localhost:8081/api/users/${userId}`, {
         method: 'PUT',
@@ -91,6 +94,9 @@ const Settings = () => {
     }
   };
 
+  /**
+   * Handle deleting the user's account.
+   */
   const handleDeleteAccount = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -98,15 +104,9 @@ const Settings = () => {
       return;
     }
 
-    // Log the token to the console
-    console.log('Token:', token);
-
     try {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
       const userId = decodedToken.userId; // Assuming user ID is stored in 'userId' field
-
-      // Log the userId to the console
-      console.log('Delete User ID:', userId);
 
       const response = await fetch(`http://localhost:8081/api/users/${userId}`, {
         method: 'DELETE',

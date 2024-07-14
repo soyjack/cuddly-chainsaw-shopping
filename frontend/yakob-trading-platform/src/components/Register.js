@@ -1,8 +1,12 @@
-// Register.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
 
+/**
+ * The Register component handles user registration.
+ * It provides a form for users to enter their username, password, and email,
+ * and handles the submission to the server.
+ */
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -11,6 +15,12 @@ const Register = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  /**
+   * Handles the form submission for user registration.
+   * Sends a POST request to the server with the entered username, password, and email.
+   * 
+   * @param {Event} event - The form submission event.
+   */
   const handleRegister = async (event) => {
     event.preventDefault();
     try {
@@ -33,6 +43,9 @@ const Register = () => {
     }
   };
 
+  /**
+   * Redirects the user to the login page.
+   */
   const handleLoginRedirect = () => {
     navigate('/login');
   };

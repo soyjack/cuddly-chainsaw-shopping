@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import './Profile.css';
 
+/**
+ * The Profile component displays the user's posts and provides functionality
+ * to create, edit, and delete posts.
+ */
 const Profile = () => {
   const [items, setItems] = useState([]);
   const [editingItem, setEditingItem] = useState(null);
   const [updatedItem, setUpdatedItem] = useState({ itemName: '', itemDescription: '', price: '', imageName: '' });
   const [newItem, setNewItem] = useState({ itemName: '', itemDescription: '', price: '', imageName: '' });
 
+  /**
+   * Fetch the user's posts from the server when the component mounts.
+   */
   useEffect(() => {
     const fetchProfileItems = async () => {
       const token = localStorage.getItem('token');
-      console.log("Retrieved token:", token);
 
       if (!token) {
         console.error('No token found');
@@ -48,6 +54,11 @@ const Profile = () => {
     fetchProfileItems();
   }, []);
 
+  /**
+   * Handle deleting a post.
+   * 
+   * @param {number} itemId - The ID of the item to delete.
+   */
   const handleDelete = async (itemId) => {
     const token = localStorage.getItem('token');
     try {
@@ -68,6 +79,11 @@ const Profile = () => {
     }
   };
 
+  /**
+   * Handle editing a post.
+   * 
+   * @param {Object} item - The item to edit.
+   */
   const handleEdit = (item) => {
     setEditingItem(item.id);
     setUpdatedItem({
@@ -78,15 +94,17 @@ const Profile = () => {
     });
   };
 
+  /**
+   * Handle updating a post.
+   * 
+   * @param {number} itemId - The ID of the item to update.
+   */
   const handleUpdate = async (itemId) => {
     const token = localStorage.getItem('token');
     try {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
       const userId = decodedToken.userId;
       const updatedPost = { ...updatedItem, price: Number(updatedItem.price), seller: { id: userId } };
-
-      // Log the JSON payload to the console
-      console.log('Update Payload:', JSON.stringify(updatedPost, null, 2));
 
       const response = await fetch(`http://localhost:8080/api/itemposts/${itemId}`, {
         method: 'PUT',
@@ -108,16 +126,29 @@ const Profile = () => {
     }
   };
 
+  /**
+   * Handle input change for the updated item.
+   * 
+   * @param {Event} e - The input change event.
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUpdatedItem({ ...updatedItem, [name]: value });
   };
 
+  /**
+   * Handle input change for the new item.
+   * 
+   * @param {Event} e - The input change event.
+   */
   const handleNewItemChange = (e) => {
     const { name, value } = e.target;
     setNewItem({ ...newItem, [name]: value });
   };
 
+  /**
+   * Handle creating a new post.
+   */
   const handleCreatePost = async () => {
     const token = localStorage.getItem('token');
     try {
@@ -131,9 +162,6 @@ const Profile = () => {
           id: userId
         }
       };
-
-      // Log the JSON payload to the console
-      console.log('Create Post Payload:', JSON.stringify(newPost, null, 2));
 
       const response = await fetch(`http://localhost:8080/api/itemposts/add`, {
         method: 'POST',
