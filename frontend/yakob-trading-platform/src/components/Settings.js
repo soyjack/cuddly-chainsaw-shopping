@@ -15,11 +15,14 @@ const Settings = () => {
         return;
       }
 
+      // Log the token to the console
+      console.log('Token:', token);
+
       try {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
         const userId = decodedToken.userId; // Assuming user ID is stored in 'userId' field
 
-        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+        const response = await fetch(`http://localhost:8081/api/users/${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -51,6 +54,9 @@ const Settings = () => {
       return;
     }
 
+    // Log the token to the console
+    console.log('Token:', token);
+
     try {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
       const userId = decodedToken.userId; // Assuming user ID is stored in 'userId' field
@@ -64,7 +70,7 @@ const Settings = () => {
       // Log the JSON payload to the console
       console.log('Update Payload:', JSON.stringify(updatedInfo, null, 2));
 
-      const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+      const response = await fetch(`http://localhost:8081/api/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -92,6 +98,9 @@ const Settings = () => {
       return;
     }
 
+    // Log the token to the console
+    console.log('Token:', token);
+
     try {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
       const userId = decodedToken.userId; // Assuming user ID is stored in 'userId' field
@@ -99,7 +108,7 @@ const Settings = () => {
       // Log the userId to the console
       console.log('Delete User ID:', userId);
 
-      const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+      const response = await fetch(`http://localhost:8081/api/users/${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
