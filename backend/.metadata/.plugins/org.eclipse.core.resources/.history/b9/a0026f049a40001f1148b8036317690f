@@ -1,0 +1,31 @@
+package com.hamy.tradeshop.service;
+
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.hamy.tradeshop.model.ItemPost;
+import com.hamy.tradeshop.repository.ItemPostRepository;
+
+@Service
+public class ItemPostService {
+    
+    @Autowired
+    private ItemPostRepository itemPostRepository;
+
+    public List<ItemPost> getAllItemPosts() {
+        return (List<ItemPost>) itemPostRepository.findAll();
+    }
+
+    public Optional<ItemPost> getItemPostById(Long id) {
+        return itemPostRepository.findById(id);
+    }
+
+    public ItemPost saveItemPost(ItemPost itemPost) {
+        return itemPostRepository.save(itemPost);
+    }
+
+    public void deleteItemPost(Long id) {
+        itemPostRepository.deleteById(id);
+    }
+}

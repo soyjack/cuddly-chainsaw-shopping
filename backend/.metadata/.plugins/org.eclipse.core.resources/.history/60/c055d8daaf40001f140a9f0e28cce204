@@ -1,0 +1,57 @@
+//package com.hamy.tradeshop.config;
+//
+//import com.nimbusds.jose.JWSObject;
+//import com.nimbusds.jose.crypto.MACVerifier;
+//import com.nimbusds.jwt.SignedJWT;
+//import org.springframework.security.authentication.AuthenticationManager;
+//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+//import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+//
+//import javax.servlet.FilterChain;
+//import javax.servlet.ServletException;
+//import javax.servlet.http.HttpServletRequest;
+//import javax.servlet.http.HttpServletResponse;
+//import java.io.IOException;
+//import java.text.ParseException;
+//import java.util.ArrayList;
+//
+//public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
+//
+//    private final String jwtSecret;
+//
+//    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, String jwtSecret) {
+//        super(authenticationManager);
+//        this.jwtSecret = jwtSecret;
+//    }
+//
+//    @Override
+//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+//            throws IOException, ServletException {
+//        String header = request.getHeader("Authorization");
+//
+//        if (header == null || !header.startsWith("Bearer ")) {
+//            chain.doFilter(request, response);
+//            return;
+//        }
+//
+//        String token = header.replace("Bearer ", "");
+//
+//        try {
+//            SignedJWT signedJWT = SignedJWT.parse(token);
+//            JWSObject jwsObject = signedJWT.getHeader();
+//            if (signedJWT.verify(new MACVerifier(jwtSecret.getBytes()))) {
+//                String user = signedJWT.getJWTClaimsSet().getSubject();
+//
+//                if (user != null) {
+//                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+//                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+//                }
+//            }
+//        } catch (ParseException | java.text.ParseException e) {
+//            SecurityContextHolder.clearContext();
+//        }
+//
+//        chain.doFilter(request, response);
+//    }
+//}

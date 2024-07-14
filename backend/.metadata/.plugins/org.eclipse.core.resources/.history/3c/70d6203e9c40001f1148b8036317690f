@@ -1,0 +1,54 @@
+package com.hamy.tradeshop.config;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import javax.crypto.SecretKey;
+import javax.servlet.FilterChain;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
+
+    private final String jwtSecret;
+
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, String jwtSecret) {
+        super(authenticationManager);
+        this.jwtSecret = jwtSecret;
+    }
+
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException {
+        String header = request.getHeader("Authorization");
+
+        if (header == null || !header.startsWith("Bearer ")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        String token = header.replace("Bearer ", "");
+
+        try {
+            Claims claims = ((Object) Jwts.parser()
+                .setSigningKey(jwtSecret))
+                .parseClaimsJws(token)
+                .getBody();
+
+            String user = claims.getSubject();
+
+            if (user != null) {
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+        } catch (Exception e) {
+            SecurityContextHolder.clearContext();
+        }
+
+        chain.doFilter(request, response);
+    }
+}

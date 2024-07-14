@@ -1,0 +1,51 @@
+package com.hamy.tradeshop.service;
+
+import com.hamy.tradeshop.model.ItemPost;
+import com.hamy.tradeshop.model.User;
+import com.hamy.tradeshop.repository.ItemPostRepository;
+import com.hamy.tradeshop.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class ItemPostService {
+
+    @Autowired
+    private ItemPostRepository itemPostRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<ItemPost> getAllItemPosts() {
+        return itemPostRepository.findAll();
+    }
+
+    public ItemPost saveItemPost(ItemPost itemPost) {
+        return itemPostRepository.save(itemPost);
+    }
+
+    public List<ItemPost> getItemPostsBySellerId(Long sellerId) {
+        return itemPostRepository.findBySellerId(sellerId);
+    }
+
+    public Optional<ItemPost> getItemPostById(Long id) {
+        return itemPostRepository.findById(id);
+    }
+
+    public void deleteItemPost(Long id) {
+        itemPostRepository.deleteById(id);
+    }
+
+    public ItemPost createItemPost(Long userId, ItemPost itemPostDetails) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            itemPostDetails.setSeller(userOptional.get());
+            return itemPostRepository.save(itemPostDetails);
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
+}

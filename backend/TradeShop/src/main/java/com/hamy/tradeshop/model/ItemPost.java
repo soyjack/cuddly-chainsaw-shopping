@@ -1,5 +1,7 @@
 package com.hamy.tradeshop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -14,70 +16,57 @@ public class ItemPost {
     private Double price;
 
     @ManyToOne
-    @JoinColumn(name = "seller_id")
+    @JoinColumn(name = "seller_id", nullable = false)
+    @JsonIgnoreProperties("itemsForSale") // Ignore itemsForSale to prevent recursion
     private User seller;
-
-    @ManyToOne
-    @JoinColumn(name = "buyer_id")
-    private User buyer;
 
     public ItemPost() {}
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getImageName() {
-		return imageName;
-	}
+    public String getImageName() {
+        return imageName;
+    }
 
-	public void setImageName(String imageName) {
-		this.imageName = imageName;
-	}
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
 
-	public String getItemName() {
-		return itemName;
-	}
+    public String getItemName() {
+        return itemName;
+    }
 
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
 
-	public String getItemDescription() {
-		return itemDescription;
-	}
+    public String getItemDescription() {
+        return itemDescription;
+    }
 
-	public void setItemDescription(String itemDescription) {
-		this.itemDescription = itemDescription;
-	}
+    public void setItemDescription(String itemDescription) {
+        this.itemDescription = itemDescription;
+    }
 
-	public Double getPrice() {
-		return price;
-	}
+    public Double getPrice() {
+        return price;
+    }
 
-	public void setPrice(Double price) {
-		this.price = price;
-	}
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
-	public User getSeller() {
-		return seller;
-	}
+    public User getSeller() {
+        return seller;
+    }
 
-	public void setSeller(User seller) {
-		this.seller = seller;
-	}
-
-	public User getBuyer() {
-		return buyer;
-	}
-
-	public void setBuyer(User buyer) {
-		this.buyer = buyer;
-	}
-
-    
+    public void setSeller(User seller) {
+        this.seller = seller;
+    }
 }

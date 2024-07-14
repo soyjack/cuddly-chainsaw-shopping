@@ -1,0 +1,21 @@
+package com.hamy.tradeshop.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.hamy.tradeshop.model.User;
+import com.hamy.tradeshop.service.UserService;
+
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @PostMapping("/sync")
+    public ResponseEntity<User> syncUser(@RequestBody User user) {
+        User syncedUser = userService.syncUser(user);
+        return ResponseEntity.ok(syncedUser);
+    }
+}

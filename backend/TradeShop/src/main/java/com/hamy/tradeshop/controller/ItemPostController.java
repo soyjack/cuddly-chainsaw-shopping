@@ -11,7 +11,7 @@ import com.hamy.tradeshop.model.ItemPost;
 import com.hamy.tradeshop.service.ItemPostService;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/itemposts")
 public class ItemPostController {
     
@@ -25,7 +25,13 @@ public class ItemPostController {
     
     @PostMapping("/add")
     public ResponseEntity<ItemPost> createItemPost(@RequestBody ItemPost itemPost) {
-        return ResponseEntity.ok(itemPostService.saveItemPost(itemPost));
+        return ResponseEntity.ok(itemPostService.createItemPost(itemPost));
+    }
+    
+    
+    @GetMapping("/user/{sellerId}")
+    public List<ItemPost> getItemPostsBySellerId(@PathVariable Long sellerId) {
+        return itemPostService.getItemPostsBySellerId(sellerId);
     }
 
     @GetMapping("/{id}")

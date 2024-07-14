@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="jwk"/>
+		<item key="selection" value=""/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="crea"/>
+			<item value="buy"/>
+			<item value="sell"/>
+			<item value="jwtis"/>
+			<item value="secur"/>
+			<item value="jsonwe"/>
+			<item value="spring-boot-st"/>
+			<item value="JwtAut"/>
+			<item value="jjw"/>
+			<item value="starter"/>
+			<item value="jjwt"/>
 			<item value="jwk.jwk"/>
 			<item value="jwk"/>
 			<item value="javax.servlet-api"/>
 			<item value="nimbus-jose-jwt"/>
-			<item value="spring-boot-starter-oauth2-resource-server"/>
-			<item value="spring-boot-starter-security"/>
-			<item value="serv"/>
-			<item value="javax"/>
-			<item value="nimb"/>
-			<item value="oauth2"/>
-			<item value="nimbus"/>
-			<item value="dep"/>
-			<item value="getSe"/>
 		</list>
 		<list key="replacehistory">
 		</list>

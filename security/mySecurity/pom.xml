@@ -71,6 +71,20 @@
         <version>0.11.5</version>
         <scope>runtime</scope>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-maven-plugin -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-maven-plugin</artifactId>
+    <version>3.1.1</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.apache.maven.shared/maven-artifact-transfer -->
+<dependency>
+    <groupId>org.apache.maven.shared</groupId>
+    <artifactId>maven-artifact-transfer</artifactId>
+    <version>0.13.1</version>
+</dependency>
+
+
         <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-devtools</artifactId>

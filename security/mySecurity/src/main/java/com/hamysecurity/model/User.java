@@ -1,8 +1,12 @@
 package com.hamysecurity.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "user")
+@JsonIgnoreProperties({"itemsForSale"}) // Ignore itemsForSale to prevent recursion
 public class User {
 
     @Id

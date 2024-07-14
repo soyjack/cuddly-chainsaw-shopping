@@ -5,4 +5,5 @@ import com.hamy.tradeshop.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
+    User getUserById(Long userId);
 }

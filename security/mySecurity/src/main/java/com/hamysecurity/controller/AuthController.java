@@ -41,7 +41,9 @@ public class AuthController {
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(signInRequest.getUsername());
-        final String jwt = jwtUtil.generateToken(userDetails);
+        final Long userId = userService.getUserIdByUsername(signInRequest.getUsername()); // Get user ID
+
+        final String jwt = jwtUtil.generateToken(userDetails, userId); // Pass user ID to generateToken
 
         return new AuthenticationResponse(jwt);
     }

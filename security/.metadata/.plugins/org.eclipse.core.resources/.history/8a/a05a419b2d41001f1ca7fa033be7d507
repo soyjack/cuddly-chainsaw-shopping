@@ -1,0 +1,54 @@
+package com.hamysecurity.util;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.JwsHeader;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.time.Instant;
+
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.OctetSequenceKey;
+import com.nimbusds.jose.jwk.source.ImmutableSecret;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
+
+@Component
+public class JwtUtil {
+
+    private final JwtEncoder jwtEncoder;
+    private final String jwtIssuer;
+
+    public JwtUtil(@Value("${security.jwt.secret-key}") String secretKey,
+                   @Value("${security.jwt.issuer}") String jwtIssuer) {
+        SecretKey secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
+        JWK jwk = new OctetSequenceKey.Builder(secretKeySpec).build();
+        JWKSource<SecurityContext> jwkSource = new ImmutableSecret<>(secretKeySpec);
+        this.jwtEncoder = new NimbusJwtEncoder(jwkSource);
+        this.jwtIssuer = jwtIssuer.trim();
+    }
+
+    public String generateToken(UserDetails userDetails) {
+        Instant now = Instant.now();
+
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer(jwtIssuer)
+                .issuedAt(now)
+                .expiresAt(now.plusSeconds(24 * 3600)) // 1 day expiration
+                .subject(userDetails.getUsername())
+                .claim("role", userDetails.getAuthorities().toString())
+                .claim("userId", userId)
+                .build();
+
+        JwtEncoderParameters params = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
+
+        return jwtEncoder.encode(params).getTokenValue();
+    }
+}

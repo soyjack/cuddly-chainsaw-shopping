@@ -1,0 +1,7 @@
+package com.hamysecurity.service;
+
+import com.hamysecurity.dto.SignUpRequest;
+
+public interface UserService {
+    void signup(SignUpRequest signUpRequest);
+}

@@ -24,8 +24,8 @@ public class SecurityConfig {
             .cors().and()
             .csrf().disable()
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/public/**", "/authenticate/**").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/public/**", "/authenticate/**", "/api/users/sync").permitAll()
+                .requestMatchers("/api/**").permitAll()
             )
             .oauth2ResourceServer(oauth2 -> oauth2
                 .jwt(jwt -> jwt.decoder(jwtDecoder()))
@@ -37,7 +37,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        String secretKey = "your-32-character-long-secret-key-1234567890123456"; // Use the same secret key used in mySecurity
+        String secretKey = "X8u3tQw9kZ2pLm7eRd5yNhV4fGj6Bs8W"; // Use the same secret key used in mySecurity
         byte[] keyBytes = secretKey.getBytes();
         SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, "HmacSHA256");
         return NimbusJwtDecoder.withSecretKey(secretKeySpec).build();

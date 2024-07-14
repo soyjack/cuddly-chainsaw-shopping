@@ -9,12 +9,12 @@ import com.hamy.tradeshop.repository.UserRepository;
 
 @Service
 public class UserService {
-    
+
     @Autowired
     private UserRepository userRepository;
 
     public List<User> getAllUsers() {
-        return (List<User>) userRepository.findAll();
+        return userRepository.findAll();
     }
 
     public Optional<User> getUserById(Long id) {
@@ -27,5 +27,20 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+    
+    public User syncUser(User user) {
+    	System.out.println("Got into sync user method");
+        User existingUser = userRepository.findByUsername(user.getUsername());
+        if (existingUser != null) {
+            // Update existing user
+            existingUser.setPassword(user.getPassword());
+            existingUser.setEmail(user.getEmail());
+            return userRepository.save(existingUser);
+        } else {
+            // Create new user
+        	System.out.println("Creating new user");
+            return userRepository.save(user);
+        }
     }
 }

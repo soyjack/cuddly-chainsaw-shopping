@@ -1,0 +1,45 @@
+package com.hamysecurity.service;
+
+import com.hamysecurity.dto.SignUpRequest;
+import com.hamysecurity.model.User;
+import com.hamysecurity.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public void signup(SignUpRequest signUpRequest) {
+    	
+        User user = new User();
+        user.setUsername(signUpRequest.getUsername());
+        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        user.setEmail(signUpRequest.getEmail());
+
+        userRepository.save(user);
+
+        // Synchronize with TradeShop
+        synchronizeWithTradeShop(user);
+    }
+
+    private void synchronizeWithTradeShop(User user) {
+        RestTemplate restTemplate = new RestTemplate();
+        String tradeShopUrl = "http://localhost:8080/api/users/sync";
+        
+        try {
+            restTemplate.postForEntity(tradeShopUrl, user, User.class);
+        } catch (Exception e) {
+            // Handle the error (e.g., log it)
+            e.printStackTrace();
+        }
+    }
+}
