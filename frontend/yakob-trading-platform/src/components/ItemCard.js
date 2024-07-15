@@ -11,6 +11,12 @@ import './ItemCard.css';
  */
 const ItemCard = ({ item, onAddToCart }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+
+  const handleAddToCart = () => {
+    onAddToCart(item);
+    setAddedToCart(true);
+  };
 
   return (
     <div
@@ -26,9 +32,14 @@ const ItemCard = ({ item, onAddToCart }) => {
         <img src={item.imageName} alt={item.itemName} className="item-image" />
       )}
       <h3>{item.itemName}</h3>
-      <p>{item.price}</p> {/* Display price */}
-      <button onClick={() => onAddToCart(item)}>Add to Cart</button>
-      <p>Seller: {item.seller?.username}</p> {/* Display seller information */}
+      <p className="price">${item.price}</p> {/* Display price with dollar sign */}
+      <button
+        className={`add-to-cart-button ${addedToCart ? 'added' : ''}`}
+        onClick={handleAddToCart}
+      >
+        {addedToCart ? 'Added to Cart' : 'Add to Cart'}
+      </button>
+      <p className='seller'>Seller : {item.seller?.username}</p> {/* Display seller information */}
     </div>
   );
 };

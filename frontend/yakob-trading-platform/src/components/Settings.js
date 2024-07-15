@@ -9,7 +9,6 @@ const Settings = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
 
   /**
    * Fetch the user's current profile information when the component mounts.
@@ -83,13 +82,13 @@ const Settings = () => {
       });
 
       if (response.ok) {
-        setMessage('Profile updated successfully');
+        alert('Profile updated successfully');
       } else {
-        setMessage('Error updating profile');
+        alert('Error updating profile');
         console.error('Error updating profile:', response.statusText);
       }
     } catch (error) {
-      setMessage('Error updating profile');
+      alert('Error updating profile');
       console.error('Error updating profile:', error);
     }
   };
@@ -116,15 +115,15 @@ const Settings = () => {
       });
 
       if (response.ok) {
-        setMessage('Account deleted successfully');
+        alert('Account deleted successfully');
         localStorage.removeItem('token');
         window.location.href = '/login';
       } else {
-        setMessage('Error deleting account');
+        alert('Error deleting account');
         console.error('Error deleting account:', response.statusText);
       }
     } catch (error) {
-      setMessage('Error deleting account');
+      alert('Error deleting account');
       console.error('Error deleting account:', error);
     }
   };
@@ -166,7 +165,6 @@ const Settings = () => {
         <button type="submit" className="update-button">Update Profile</button>
       </form>
       <button onClick={handleDeleteAccount} className="delete-button">Delete Account</button>
-      {message && <p className="message">{message}</p>}
     </div>
   );
 };

@@ -1,6 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Login.css';
 
 /**
@@ -11,7 +13,6 @@ import './Login.css';
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
@@ -24,6 +25,12 @@ const Login = () => {
    */
   const handleLogin = async (event) => {
     event.preventDefault();
+
+    if (!username || !password) {
+      setError('Please fill in both username and password');
+      return;
+    }
+
     try {
       const response = await fetch('http://localhost:8081/authenticate/signin', {
         method: 'POST',
@@ -34,7 +41,7 @@ const Login = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Login failed');
+        throw new Error('Incorrect username or password. Try again');
       }
 
       const data = await response.json();
@@ -45,12 +52,22 @@ const Login = () => {
 
       localStorage.setItem('token', data.jwt);
       login(data.jwt);
-      setMessage('Login successful');
       setError('');
-      navigate('/dashboard');
+      toast.success('Login successful', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 3000);
     } catch (error) {
       setError(error.message);
-      setMessage('');
     }
   };
 
@@ -90,8 +107,8 @@ const Login = () => {
       <p className="register-redirect">
         Don't have an account? <button onClick={handleRegisterRedirect} className="register-button">Create an account</button>
       </p>
-      {message && <p className="login-message">{message}</p>}
       {error && <p className="login-error">{error}</p>}
+      <ToastContainer />
     </div>
   );
 };

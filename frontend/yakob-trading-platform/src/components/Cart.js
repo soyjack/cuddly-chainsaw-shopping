@@ -1,40 +1,48 @@
 import React from 'react';
 import { useCart } from './CartContext';
-import './Dashboard.css'; // Reuse the same styles
+import './Cart.css';
 
 /**
  * The Cart component renders the items added to the cart.
  * It provides functionality to remove items and proceed to checkout.
  */
 const Cart = () => {
-  // Retrieve cart-related functions and state from CartContext
   const { cart, removeFromCart, clearCart } = useCart();
 
-  /**
-   * Handles the checkout process.
-   * Currently, it displays an alert and clears the cart.
-   */
   const handleCheckout = () => {
     alert('Checkout successful!');
     clearCart();
   };
 
   return (
-    <div className="dashboard">
-      <div className="item-list">
-        {cart.length > 0 ? (
-          cart.map(item => (
-            <div key={item.id} className="cart-item">
-              <h3>{item.itemName}</h3>
-              <p>Price: ${item.price}</p>
-              <p>Quantity: {item.quantity}</p>
-              <button onClick={() => removeFromCart(item.id)}>Remove</button>
-            </div>
-          ))
-        ) : (
-          <p className="no-items-found">No items in cart</p>
-        )}
-      </div>
+    <div className="cart">
+      <h2 id='summry'>Your Cart Summary</h2>
+      {cart.length > 0 ? (
+        <table className="cart-table">
+          <thead>
+            <tr>
+              <th>Item Name</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cart.map(item => (
+              <tr key={item.id}>
+                <td>{item.itemName}</td>
+                <td>${item.price.toFixed(2)}</td>
+                <td>{item.quantity}</td>
+                <td>
+                  <button className="remove-button" onClick={() => removeFromCart(item.id)}>Remove</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p id="no-items-in-cart">No items in cart</p>
+      )}
       {cart.length > 0 && (
         <button className="checkout-button" onClick={handleCheckout}>Check Out</button>
       )}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
@@ -11,41 +11,30 @@ import { AuthProvider, AuthContext } from './components/AuthContext';
 import { CartProvider } from './components/CartContext';
 import './styles.css';
 
-/**
- * PrivateRoute component restricts access to authenticated users only.
- * If the user is not authenticated, they are redirected to the login page.
- * 
- * @param {Object} children - The child components to render if authenticated.
- */
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated } = React.useContext(AuthContext);
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
-/**
- * App component sets up the main structure and routing for the application.
- * It includes context providers for authentication and cart management,
- * and defines routes for various components.
- */
 const App = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+
   return (
     <AuthProvider>
       <CartProvider>
         <Router>
           <div className="App">
-            {/* Conditionally render the Header component based on authentication status */}
             <AuthContext.Consumer>
-              {({ isAuthenticated }) => isAuthenticated && <Header />}
+              {({ isAuthenticated }) => isAuthenticated && (
+                <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+              )}
             </AuthContext.Consumer>
             <main>
               <Routes>
-                {/* Define private routes that require authentication */}
-                <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+                <Route path="/dashboard" element={<PrivateRoute><Dashboard searchQuery={searchQuery} /></PrivateRoute>} />
                 <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
                 <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                 <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
-
-                {/* Define public routes */}
                 <Route path="/" element={<Navigate to="/dashboard" />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />

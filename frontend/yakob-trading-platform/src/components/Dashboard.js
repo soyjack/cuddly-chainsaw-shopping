@@ -3,21 +3,13 @@ import ItemCard from './ItemCard';
 import { useCart } from './CartContext';
 import './Dashboard.css';
 
-/**
- * The Dashboard component is responsible for displaying a list of items fetched from the server.
- * It also allows users to add items to their cart.
- */
-const Dashboard = () => {
+const Dashboard = ({ searchQuery }) => {
   const [items, setItems] = useState([]);
   const { addToCart } = useCart();
 
-  /**
-   * useEffect hook to fetch items from the server when the component mounts.
-   * It retrieves the authentication token from local storage and includes it in the request headers.
-   */
   useEffect(() => {
     const fetchItems = async () => {
-      const token = localStorage.getItem('token'); // Get the token from local storage
+      const token = localStorage.getItem('token');
 
       if (!token) {
         console.error('No token found');
@@ -29,7 +21,7 @@ const Dashboard = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // Include the bearer token
+            'Authorization': `Bearer ${token}`,
           },
         });
 
@@ -48,17 +40,26 @@ const Dashboard = () => {
     fetchItems();
   }, []);
 
+  const filteredItems = items.filter(item =>
+    item.itemName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.itemDescription?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.seller?.username?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="dashboard">
       <div className="item-list">
-        {items.length > 0 ? (
-          items.map((item) => (
+        {filteredItems.length > 0 ? (
+          filteredItems.map((item) => (
             <ItemCard key={item.id} item={item} onAddToCart={addToCart} />
           ))
         ) : (
-          <p className="no-items-found">No items found</p>
+          <p id="no-items-found">No items found</p>
         )}
       </div>
+      <footer className="footer">
+        <p> TradeShop.com, Inc © {new Date().getFullYear()}  All rights reserved.</p>
+      </footer>
     </div>
   );
 };
